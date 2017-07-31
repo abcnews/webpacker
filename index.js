@@ -224,6 +224,10 @@ module.exports = {
         try {
             require(`${APP_ROOT_PATH}/webpack.config`);
         } catch (e) {
+            if (!e.message.includes('Cannot find module')) {
+                throw e;
+            }
+
             return false;
         }
 
