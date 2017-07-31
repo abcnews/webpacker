@@ -199,14 +199,14 @@ Tasks.run = function(args, config) {
 
 module.exports = {
     APP_ROOT_PATH,
-    
+
     hasWebpackConfig() {
         try {
             require(`${APP_ROOT_PATH}/webpack.config`);
-        } catch () {
+        } catch (e) {
             return false;
         }
-        
+
         return true;
     },
 
