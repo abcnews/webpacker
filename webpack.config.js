@@ -3,7 +3,7 @@ const AutoPrefixer = require('autoprefixer');
 const Path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const APP_ROOT_PATH = require('app-root-path').toString();
+const { APP_ROOT_PATH } = require('.');
 
 module.exports = config => {
     config = Object.assign(

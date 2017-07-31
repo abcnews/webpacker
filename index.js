@@ -3,9 +3,30 @@ const FS = require('fs-extra');
 const Webpack = require('webpack');
 const Log = require('./log');
 
-const APP_ROOT_PATH = require('app-root-path').toString();
-
 const DEV_SERVER_PORT = 8000;
+
+function appRoot() {
+    if (process.env.APP_ROOT) return process.env.APP_ROOT;
+
+    let current_directory = process.cwd();
+    let project_directory = null;
+
+    let levels = 50;
+    while (current_directory.length > 0 && !project_directory && levels-- > 0) {
+        if (
+            FS.readdirSync(current_directory).includes('node_modules') ||
+            FS.readdirSync(current_directory).includes('package.json')
+        ) {
+            project_directory = current_directory;
+        } else {
+            current_directory = Path.dirname(current_directory);
+        }
+    }
+
+    return project_directory;
+}
+
+const APP_ROOT_PATH = appRoot();
 
 function clearRequireCache(target) {
     Object.keys(require.cache).forEach(key => {
@@ -144,7 +165,6 @@ Tasks.build = function(args, config) {
 
 Tasks.run = function(args, config) {
     const WebpackDevServer = require('webpack-dev-server');
-    const enableDestroy = require('server-destroy');
 
     args = args || [];
     config = config || {};
@@ -217,6 +237,10 @@ module.exports = {
     build(args, config) {
         args = args || [];
         config = Object.assign({}, { app_root_path: APP_ROOT_PATH }, config);
+
+        if (args.includes('serve')) {
+            args.push('hot');
+        }
 
         return Tasks.clean(args, config)
             .then(() => {
