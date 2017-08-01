@@ -53,7 +53,9 @@ function webpackConfig(args, config, logged) {
     }
 
     // See if we need to build it for FTP
-    if (args.includes('ftp')) {
+    if (args.includes('ftp') || args.includes('release')) {
+        // TODO: handle other release targets
+
         if (logged) {
             Log.info('Building for', Log.bold.magenta('FTP'));
         }
@@ -279,6 +281,8 @@ module.exports = {
         return Tasks.clean(args, config)
             .then(() => {
                 return Tasks.build(args, config).then(() => {
+                    if (args.includes('release')) return true; // Aunty will take it from here
+
                     if (!args.includes('hot')) return process.exit();
                     return Tasks.run(args, config);
                 });
