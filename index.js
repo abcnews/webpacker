@@ -51,7 +51,35 @@ function webpackConfig(args, config, logged) {
         webpack_config = webpack_config(config);
     }
 
-    if (args.includes('hot')) {
+    // See if we need to build it for FTP
+    if (args.includes('ftp')) {
+        if (logged) {
+            Log.info('Building for', Log.bold.magenta('FTP'));
+        }
+
+        try {
+            const { execSync } = require('child_process');
+
+            const package_config = require(`${APP_ROOT_PATH}/package.json`);
+            const name = package_config.name;
+            const git_branch = execSync(`git branch | grep '*'`)
+                .toString()
+                .split('\n')[0]
+                .replace('* ', '');
+
+            const ftp_to = package_config.aunty.deploy.contentftp.to
+                .replace('/www', '//www.abc.net.au')
+                .replace('<name>', name)
+                .replace('<id>', git_branch);
+
+            webpack_config.output.publicPath = ftp_to + '/';
+        } catch (e) {
+            Log.error('Building for FTP failed.');
+            Log.error(e);
+
+            process.exit();
+        }
+    } else if (args.includes('hot')) {
         if (logged) {
             Log.info('Building with', Log.bold.magenta('Hot Reload'));
         }
