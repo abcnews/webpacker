@@ -1,4 +1,5 @@
 const Path = require('path');
+const { hostname } = require('os');
 const FS = require('fs-extra');
 const Webpack = require('webpack');
 const Log = require('./log');
@@ -87,33 +88,33 @@ function webpackConfig(args, config, logged) {
         let entry = webpack_config.entry;
         if (typeof webpack_config.entry === 'string') {
             webpack_config.entry = [
-                `webpack-dev-server/client?http://localhost:${DEV_SERVER_PORT}`,
+                `webpack-dev-server/client?http://0.0.0.0:${DEV_SERVER_PORT}`,
                 'webpack/hot/dev-server',
                 webpack_config.entry
             ];
         } else if (webpack_config.entry instanceof Array) {
             webpack_config.entry.unshift(
-                `webpack-dev-server/client?http://localhost:${DEV_SERVER_PORT}`,
+                `webpack-dev-server/client?http://0.0.0.0:${DEV_SERVER_PORT}`,
                 'webpack/hot/dev-server'
             );
         } else {
             Object.keys(webpack_config.entry).forEach(entry => {
                 if (typeof webpack_config.entry[entry] === 'string') {
                     webpack_config.entry[entry] = [
-                        `webpack-dev-server/client?http://localhost:${DEV_SERVER_PORT}`,
+                        `webpack-dev-server/client?http://0.0.0.0:${DEV_SERVER_PORT}`,
                         'webpack/hot/dev-server',
                         webpack_config.entry[entry]
                     ];
                 } else {
                     webpack_config.entry[entry].unshift(
-                        `webpack-dev-server/client?http://localhost:${DEV_SERVER_PORT}`,
+                        `webpack-dev-server/client?http://0.0.0.0:${DEV_SERVER_PORT}`,
                         'webpack/hot/dev-server'
                     );
                 }
             });
         }
 
-        webpack_config.output.publicPath = `http://localhost:${DEV_SERVER_PORT}/`;
+        webpack_config.output.publicPath = `http://0.0.0.0:${DEV_SERVER_PORT}/`;
         webpack_config.plugins.push(new Webpack.HotModuleReplacementPlugin());
     } else if (logged) {
         Log.info('Building');
@@ -226,6 +227,7 @@ Tasks.run = function(args, config) {
 
         var assetServer = new WebpackDevServer(compiler, {
             hot: true,
+            disableHostCheck: true,
             contentBase: '/',
             publicPath: '/',
             noInfo: true,
@@ -233,12 +235,12 @@ Tasks.run = function(args, config) {
                 'Access-Control-Allow-Origin': '*'
             }
         });
-        assetServer.listen(DEV_SERVER_PORT, 'localhost', err => {
+        assetServer.listen(DEV_SERVER_PORT, '0.0.0.0', err => {
             if (err) return reject(err);
 
             Log.info(
                 'Server started at',
-                Log.bold('http://localhost:' + DEV_SERVER_PORT)
+                Log.bold('http://' + hostname() + ':' + DEV_SERVER_PORT)
             );
             Log.info(Log.gray('Press Ctrl+C to stop'));
         });
