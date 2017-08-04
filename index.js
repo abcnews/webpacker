@@ -161,7 +161,7 @@ module.exports = {
         args = args || [];
         config = Object.assign({}, { app_root_path: APP_ROOT_PATH }, config);
 
-        if (args.includes('serve')) {
+        if (args.includes('serve') || args.includes('s')) {
             args.push('hot');
         }
 
