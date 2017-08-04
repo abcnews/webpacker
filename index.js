@@ -123,12 +123,13 @@ Tasks.run = function(args, config) {
                 'Access-Control-Allow-Origin': '*'
             }
         });
-        assetServer.listen(DEV_SERVER_PORT, '0.0.0.0', err => {
+        const port = config.port || DEV_SERVER_PORT;
+        assetServer.listen(port, '0.0.0.0', err => {
             if (err) return reject(err);
 
             Log.info(
                 'Server started at',
-                Log.bold('http://' + hostname() + ':' + DEV_SERVER_PORT)
+                Log.bold('http://' + hostname() + ':' + port)
             );
             Log.info(Log.gray('Press Ctrl+C to stop'));
         });
@@ -164,6 +165,14 @@ module.exports = {
             args.push('hot');
         }
 
+        // Work out what port our dev server should run on
+        if (args.includes('-p')) {
+            config.port = args[args.indexOf('-p') + 1];
+        } else if (args.includes('--port')) {
+            config.port = args[args.indexOf('--port') + 1];
+        }
+
+        // Run any tasks
         return Tasks.clean(args, config)
             .then(() => {
                 return Tasks.build(args, config).then(() => {
