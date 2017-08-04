@@ -1,6 +1,6 @@
 {
     "name": "@abcnews/webpacker",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "description": "A simple Webpack builder",
     "main": "index.js",
     "scripts": {
