@@ -77,15 +77,21 @@ function webpackConfig(args, config, logged) {
 
             const package_config = require(`${APP_ROOT_PATH}/package.json`);
             const name = package_config.name;
-            const git_branch = execSync(`git branch | grep '*'`)
-                .toString()
-                .split('\n')[0]
-                .replace('* ', '');
+
+            let path_id;
+            if (args.includes('--id')) {
+                path_id = args[args.indexOf('--id') + 1];
+            } else {
+                path_id = execSync(`git branch | grep '*'`)
+                    .toString()
+                    .split('\n')[0]
+                    .replace('* ', '');
+            }
 
             const ftp_to = package_config.aunty.deploy.contentftp.to
                 .replace('/www', '//www.abc.net.au')
                 .replace('<name>', name)
-                .replace('<id>', git_branch);
+                .replace('<id>', path_id);
 
             webpack_config.output.publicPath = ftp_to + '/';
         } catch (e) {
