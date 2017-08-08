@@ -94,6 +94,13 @@ function webpackConfig(args, config, logged) {
                 .replace('<id>', path_id);
 
             webpack_config.output.publicPath = ftp_to + '/';
+
+            if (logged) {
+                Log.info(
+                    'Detected asset path:',
+                    Log.bold(webpack_config.output.publicPath)
+                );
+            }
         } catch (e) {
             Log.error('Building for FTP failed.');
             Log.error(e);

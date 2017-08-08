@@ -117,7 +117,7 @@ Tasks.run = function(args, config) {
             hot: true,
             disableHostCheck: true,
             contentBase: '/',
-            publicPath: '/',
+            publicPath: webpack_config.output.publicPath,
             noInfo: true,
             headers: {
                 'Access-Control-Allow-Origin': '*'

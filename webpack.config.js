@@ -45,7 +45,15 @@ module.exports = config => {
                     exclude: /node_modules/,
                     loader: 'babel-loader',
                     options: {
-                        presets: ['react', 'es2015']
+                        presets: ['es2015'],
+                        plugins: [
+                            [
+                                'transform-react-jsx',
+                                {
+                                    pragma: 'Preact.h'
+                                }
+                            ]
+                        ]
                     }
                 },
                 {
