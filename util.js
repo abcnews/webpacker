@@ -115,6 +115,10 @@ function webpackConfig(args, config, logged) {
         const port = config.port || DEV_SERVER_PORT;
         const url = `http://${config.hostname || '0.0.0.0'}:${port}`;
 
+        if (config.hostname && logged) {
+            Log.info('Building for', Log.bold.magenta('HTML Fragment'));
+        }
+
         let entry = webpack_config.entry;
         if (typeof webpack_config.entry === 'string') {
             webpack_config.entry = [
