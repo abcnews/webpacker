@@ -112,38 +112,39 @@ function webpackConfig(args, config, logged) {
             Log.info('Building with', Log.bold.magenta('Hot Reload'));
         }
 
-        let port = config.port || DEV_SERVER_PORT;
+        const port = config.port || DEV_SERVER_PORT;
+        const url = `http://${config.hostname || '0.0.0.0'}:${port}`;
 
         let entry = webpack_config.entry;
         if (typeof webpack_config.entry === 'string') {
             webpack_config.entry = [
-                `webpack-dev-server/client?http://0.0.0.0:${port}`,
+                `webpack-dev-server/client?${url}`,
                 'webpack/hot/dev-server',
                 webpack_config.entry
             ];
         } else if (webpack_config.entry instanceof Array) {
             webpack_config.entry.unshift(
-                `webpack-dev-server/client?http://0.0.0.0:${port}`,
+                `webpack-dev-server/client?${url}`,
                 'webpack/hot/dev-server'
             );
         } else {
             Object.keys(webpack_config.entry).forEach(entry => {
                 if (typeof webpack_config.entry[entry] === 'string') {
                     webpack_config.entry[entry] = [
-                        `webpack-dev-server/client?http://0.0.0.0:${port}`,
+                        `webpack-dev-server/client?${url}`,
                         'webpack/hot/dev-server',
                         webpack_config.entry[entry]
                     ];
                 } else {
                     webpack_config.entry[entry].unshift(
-                        `webpack-dev-server/client?http://0.0.0.0:${port}`,
+                        `webpack-dev-server/client?${url}`,
                         'webpack/hot/dev-server'
                     );
                 }
             });
         }
 
-        webpack_config.output.publicPath = `http://0.0.0.0:${port}/`;
+        webpack_config.output.publicPath = `${url}/`;
         webpack_config.plugins.push(new Webpack.HotModuleReplacementPlugin());
     } else if (logged) {
         Log.info('Building');

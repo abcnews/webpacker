@@ -172,6 +172,11 @@ module.exports = {
             config.port = args[args.indexOf('--port') + 1];
         }
 
+        // Make it work when previwing with the CMS
+        if (args.includes('--fragment')) {
+            config.hostname = hostname();
+        }
+
         // Run any tasks
         return Tasks.clean(args, config)
             .then(() => {
