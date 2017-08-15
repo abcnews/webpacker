@@ -78,7 +78,7 @@ module.exports = config => {
                                       camelCase: true,
                                       sourcemaps: true,
                                       localIdentName: config.use_css_modules
-                                          ? '[name]__[local]__[hash:base64:5]'
+                                          ? '[path]__[name]__[local]--[hash:base64:5]'
                                           : '[local]'
                                   }
                               },
