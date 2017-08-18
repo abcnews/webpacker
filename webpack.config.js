@@ -139,6 +139,7 @@ module.exports = config => {
         plugins: [
             new Webpack.LoaderOptionsPlugin({
                 options: {
+                    context: __dirname,
                     postcss: [AutoPrefixer()]
                 }
             }),
